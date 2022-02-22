@@ -28,7 +28,7 @@ class MainActivity : AppCompatActivity() {
 
         setSupportActionBar(binding.toolbar)
 
-        todoListRecyclerView = findViewById(R.id.lists_recyclerview)
+        todoListRecyclerView = findViewById(R.id.listsRecyclerView)
         todoListRecyclerView.layoutManager = LinearLayoutManager(this)
         todoListRecyclerView.adapter = TodoListAdapter()
         // at this point you need to create an adapter.
