@@ -37,10 +37,10 @@ class MainActivity : AppCompatActivity() {
 //        appBarConfiguration = AppBarConfiguration(navController.graph)
 //        setupActionBarWithNavController(navController, appBarConfiguration)
 
-//        binding.fab.setOnClickListener { view ->
-//            Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-//                .setAction("Action", null).show()
-//        }
+        binding.fab.setOnClickListener { view ->
+            val adapter = todoListRecyclerView.adapter as TodoListAdapter //cast
+            adapter.addNewItem()
+        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
