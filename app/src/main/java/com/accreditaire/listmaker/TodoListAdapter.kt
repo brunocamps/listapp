@@ -10,8 +10,12 @@ class TodoListAdapter : RecyclerView.Adapter<TodoListViewHolder>() {
     // constant of type arrayOf to store the list
     private var todoLists = mutableListOf("Android development", "House work", "Errands")
 
-    fun addNewItem() {
-        todoLists.add("Todo List" + (todoLists.size + 1))// because it starts in 0
+    fun addNewItem(listName: String = "") { // if there's no string provided, it'll add an empty one
+        if (listName.isEmpty()){
+            todoLists.add("Todo List" + (todoLists.size + 1))// because it starts in 0
+        } else {
+            todoLists.add(listName)
+        }
         notifyDataSetChanged() // tells the recycler view to reload all the data
     }
 

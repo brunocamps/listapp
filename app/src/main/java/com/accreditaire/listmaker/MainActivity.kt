@@ -1,6 +1,7 @@
 package com.accreditaire.listmaker
 
 import android.os.Bundle
+import android.text.InputType
 import com.google.android.material.snackbar.Snackbar
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.findNavController
@@ -9,6 +10,8 @@ import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupActionBarWithNavController
 import android.view.Menu
 import android.view.MenuItem
+import android.widget.EditText
+import androidx.appcompat.app.AlertDialog
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.accreditaire.listmaker.databinding.ActivityMainBinding
@@ -18,7 +21,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var appBarConfiguration: AppBarConfiguration
     private lateinit var binding: ActivityMainBinding
 
-    lateinit var todoListRecyclerView: RecyclerView
+    private lateinit var todoListRecyclerView: RecyclerView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -37,9 +40,10 @@ class MainActivity : AppCompatActivity() {
 //        appBarConfiguration = AppBarConfiguration(navController.graph)
 //        setupActionBarWithNavController(navController, appBarConfiguration)
 
-        binding.fab.setOnClickListener { view ->
-            val adapter = todoListRecyclerView.adapter as TodoListAdapter //cast
-            adapter.addNewItem()
+        binding.fab.setOnClickListener { _ ->
+//            val adapter = todoListRecyclerView.adapter as TodoListAdapter //cast
+//            adapter.addNewItem()
+            showCreateTodoListDialog()
         }
     }
 
@@ -61,6 +65,26 @@ class MainActivity : AppCompatActivity() {
 
     fun myTestMethod() {
         println("Hello")
+    }
+
+    private fun showCreateTodoListDialog() {
+        val dialogTitle = getString(R.string.name_of_list)
+        val positiveButtonTitle = getString(R.string.create_list)
+        val myDialog = AlertDialog.Builder(this) // this: Pass on the activity
+        val todoTitleEditText = EditText(this) //this: pass on the activity
+        todoTitleEditText.inputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_FLAG_CAP_WORDS
+
+        myDialog.setTitle(dialogTitle)
+        myDialog.setView(todoTitleEditText)
+
+        myDialog.setPositiveButton(positiveButtonTitle) {
+            dialog, _ ->
+                val adapter = todoListRecyclerView.adapter as TodoListAdapter
+                adapter.addNewItem(todoTitleEditText.text.toString())
+
+        }
+        myDialog.create().show()
+
     }
 
 
