@@ -5,19 +5,9 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 
-class TodoListAdapter : RecyclerView.Adapter<TodoListViewHolder>() {
+class TodoListAdapter(val lists: ArrayList<TaskList>): RecyclerView.Adapter<TodoListViewHolder>() {
 
-    // constant of type arrayOf to store the list
-    private var todoLists = mutableListOf("Android development", "House work", "Errands")
-
-    fun addNewItem(listName: String = "") { // if there's no string provided, it'll add an empty one
-        if (listName.isEmpty()){
-            todoLists.add("Todo List" + (todoLists.size + 1))// because it starts in 0
-        } else {
-            todoLists.add(listName)
-        }
-        notifyDataSetChanged() // tells the recycler view to reload all the data
-    }
+    // constant of type arrayOf to store the list (old)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TodoListViewHolder {
         //First step: Create an instance variable to contain your todo lists
@@ -28,11 +18,16 @@ class TodoListAdapter : RecyclerView.Adapter<TodoListViewHolder>() {
 
     override fun onBindViewHolder(holder: TodoListViewHolder, position: Int) {
         holder.listPositionTextView.text = (position + 1).toString()
-        holder.listTitleTextView.text = todoLists[position]
+        holder.listTitleTextView.text = lists[position].name
     }
 
     override fun getItemCount(): Int {
-        return todoLists.size //size of the array
+        return lists.size //size of the array
+    }
+
+    fun addList(list: TaskList) {
+        lists.add(list)
+        notifyItemInserted(lists.size-1)
     }
 
 }
