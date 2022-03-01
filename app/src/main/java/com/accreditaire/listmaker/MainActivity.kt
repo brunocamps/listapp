@@ -1,5 +1,6 @@
 package com.accreditaire.listmaker
 
+import android.content.Intent
 import android.os.Bundle
 import android.text.InputType
 import com.google.android.material.snackbar.Snackbar
@@ -16,14 +17,17 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.accreditaire.listmaker.databinding.ActivityMainBinding
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), TodoListAdapter.TodoListClickListener {
 
-    private lateinit var appBarConfiguration: AppBarConfiguration
+
     private lateinit var binding: ActivityMainBinding
-
     private lateinit var todoListRecyclerView: RecyclerView
     // instantiate
-    val listDataManager: ListDataManager = ListDataManager(this)
+    private val listDataManager: ListDataManager = ListDataManager(this)
+
+    companion object {
+        const val INTENT_LIST_KEY = "list"
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -36,12 +40,9 @@ class MainActivity : AppCompatActivity() {
         val lists = listDataManager.readLists()
         todoListRecyclerView = findViewById(R.id.listsRecyclerView)
         todoListRecyclerView.layoutManager = LinearLayoutManager(this)
-        todoListRecyclerView.adapter = TodoListAdapter(lists)
+        todoListRecyclerView.adapter = TodoListAdapter(lists, this)
         // at this point you need to create an adapter.
 
-//        val navController = findNavController(R.id.nav_host_fragment_content_main)
-//        appBarConfiguration = AppBarConfiguration(navController.graph)
-//        setupActionBarWithNavController(navController, appBarConfiguration)
 
         binding.fab.setOnClickListener { _ ->
 //            val adapter = todoListRecyclerView.adapter as TodoListAdapter //cast
@@ -86,10 +87,20 @@ class MainActivity : AppCompatActivity() {
                 val list = TaskList(todoTitleEditText.text.toString())
                 listDataManager.saveList(list)
                 adapter.addList(list)
-
+                showTaskListItems(list)
+                dialog.dismiss()
         }
         myDialog.create().show()
+    }
 
+    private fun showTaskListItems(list: TaskList) {
+        val taskListItem = Intent(this, DetailActivity::class.java)
+        taskListItem.putExtra(INTENT_LIST_KEY, list)
+        startActivity(taskListItem)
+    }
+
+    override fun listItemClicked(list: TaskList) {
+        showTaskListItems(list)
     }
 
 
