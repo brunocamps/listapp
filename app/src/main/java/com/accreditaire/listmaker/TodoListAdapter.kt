@@ -10,6 +10,7 @@ class TodoListAdapter(private val lists: ArrayList<TaskList>, val clickListener:
     // constant of type arrayOf to store the list (old)
     interface TodoListClickListener {
         fun listItemClicked(list: TaskList)
+
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TodoListViewHolder {
