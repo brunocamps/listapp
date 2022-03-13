@@ -17,13 +17,12 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.accreditaire.listmaker.databinding.ActivityMainBinding
 
-class MainActivity : AppCompatActivity(), TodoListAdapter.TodoListClickListener {
+class MainActivity : AppCompatActivity(), TodoListFragment.OnFragmentInteractionListener {
 
 
     private lateinit var binding: ActivityMainBinding
-    private lateinit var todoListRecyclerView: RecyclerView
-    // instantiate
-    private val listDataManager: ListDataManager = ListDataManager(this)
+
+    private var todoListFragment = TodoListFragment.newInstance()
 
     companion object {
         const val INTENT_LIST_KEY = "list"
@@ -37,11 +36,6 @@ class MainActivity : AppCompatActivity(), TodoListAdapter.TodoListClickListener 
         setContentView(binding.root)
 
         setSupportActionBar(binding.toolbar)
-
-        val lists = listDataManager.readLists()
-        todoListRecyclerView = findViewById(R.id.listsRecyclerView)
-        todoListRecyclerView.layoutManager = LinearLayoutManager(this)
-        todoListRecyclerView.adapter = TodoListAdapter(lists, this)
         // at this point you need to create an adapter.
 
 
@@ -63,16 +57,11 @@ class MainActivity : AppCompatActivity(), TodoListAdapter.TodoListClickListener 
         if (requestCode == LIST_DETAIL_REQUEST_CODE) {
             data?.let {
                 val list = data.getParcelableExtra<TaskList>(INTENT_LIST_KEY)!!
-                listDataManager.saveList(list)
-                updateLists()
+                todoListFragment.saveList(list)
             }
         }
     }
 
-    private fun updateLists() {
-        val lists = listDataManager.readLists()
-        todoListRecyclerView.adapter = TodoListAdapter(lists, this)
-    }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         // Handle action bar item clicks here. The action bar will
@@ -100,10 +89,8 @@ class MainActivity : AppCompatActivity(), TodoListAdapter.TodoListClickListener 
 
         myDialog.setPositiveButton(positiveButtonTitle) {
             dialog, _ ->
-                val adapter = todoListRecyclerView.adapter as TodoListAdapter
                 val list = TaskList(todoTitleEditText.text.toString())
-                listDataManager.saveList(list)
-                adapter.addList(list)
+                todoListFragment.addList(list)
                 showTaskListItems(list)
                 dialog.dismiss()
         }
@@ -116,7 +103,7 @@ class MainActivity : AppCompatActivity(), TodoListAdapter.TodoListClickListener 
         startActivityForResult(taskListItem, LIST_DETAIL_REQUEST_CODE)
     }
 
-    override fun listItemClicked(list: TaskList) {
+    override fun onTodoListClicked(list: TaskList) {
         showTaskListItems(list)
     }
 
