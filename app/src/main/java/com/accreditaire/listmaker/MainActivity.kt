@@ -44,6 +44,10 @@ class MainActivity : AppCompatActivity(), TodoListFragment.OnFragmentInteraction
 //            adapter.addNewItem()
             showCreateTodoListDialog()
         }
+
+        supportFragmentManager.beginTransaction()
+            .add(R.id.fragment_container, todoListFragment)
+            .commit()
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -57,7 +61,7 @@ class MainActivity : AppCompatActivity(), TodoListFragment.OnFragmentInteraction
         if (requestCode == LIST_DETAIL_REQUEST_CODE) {
             data?.let {
                 val list = data.getParcelableExtra<TaskList>(INTENT_LIST_KEY)!!
-                todoListFragment.saveList(list)
+                todoListFragment.saveList(list) // have the todoListFragment call save list
             }
         }
     }
